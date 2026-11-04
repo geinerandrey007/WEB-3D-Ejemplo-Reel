@@ -35,6 +35,10 @@ body {
   height: 100svh;
   overflow: hidden;
   background: var(--bg);
+  /* el tema (claro/oscuro) cambia animando estas variables desde script.js */
+  --bg: #f5f4f0;
+  --ink: #0a0a0a;
+  --muted: #8a8984;
 }
 
 /* Piso de estudio: luz arriba, sombra suave abajo */
@@ -43,7 +47,7 @@ body {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(120% 70% at 50% 8%, #ffffff 0%, rgba(255,255,255,0) 60%),
+    radial-gradient(120% 70% at 50% 8%, color-mix(in srgb, var(--bg) 40%, #fff) 0%, transparent 60%),
     radial-gradient(90% 40% at 50% 100%, rgba(0,0,0,.07) 0%, rgba(0,0,0,0) 70%);
 }
 
@@ -138,13 +142,47 @@ body {
   will-change: transform, opacity;
 }
 
+/* Anillo orbital fino alrededor del reloj */
+.orbit {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: calc(var(--watch-h) * 1.12);
+  aspect-ratio: 1;
+  margin: calc(var(--watch-h) * -0.56) 0 0 calc(var(--watch-h) * -0.56);
+  overflow: visible;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.orbit circle { fill: none; stroke: var(--ink); stroke-width: .18; stroke-dasharray: 1 1; stroke-dashoffset: .78; opacity: .55; }
+
+/* Listones del paso "mecánico" */
+.ribbons {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Capas del modo "vista explotada" (se crean en JS) */
+.watch__part {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  visibility: hidden;
+  filter: drop-shadow(0 18px 24px rgba(0,0,0,.28));
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
 /* ---------- SCRIM inferior ---------- */
 .scrim {
   position: absolute;
   left: 0; right: 0; bottom: 0;
   height: 40%;
   z-index: 3;
-  background: linear-gradient(to top, var(--bg) 8%, rgba(245,244,240,.88) 38%, rgba(245,244,240,0) 100%);
+  background: linear-gradient(to top, var(--bg) 8%, color-mix(in srgb, var(--bg) 88%, transparent) 38%, transparent 100%);
   opacity: 0;
   will-change: opacity;
   pointer-events: none;
@@ -286,7 +324,7 @@ body {
 @media (orientation: landscape) {
   :root { --watch-h: min(78svh, 70vw); --gutter: 7vw; }
 
-  .title { font-size: min(13.4vw, 24svh); }
+  .title { font-size: min(15.5vw, 34svh); }
   .outro__big { font-size: min(13.4vw, 24svh); }
 
   .scrim { display: none; }

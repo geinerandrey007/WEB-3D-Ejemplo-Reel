@@ -25,9 +25,15 @@
       <span class="title__word" id="titleWord">SUBMARINER</span>
     </h1>
 
+    <!-- Listones "MECHANICAL HEART" (canvas, se dibujan con el scroll) -->
+    <canvas class="ribbons" id="ribbons" aria-hidden="true"></canvas>
+
     <!-- Reloj -->
     <div class="scene" id="scene">
       <div class="watch-wrap" id="watchWrap">
+        <svg class="orbit" id="orbit" viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="49.5" pathLength="1" />
+        </svg>
         <div class="floor-shadow" id="floorShadow" aria-hidden="true"></div>
 
         <div class="watch" id="watch">
@@ -63,10 +69,10 @@
 
     <!-- Contador de pasos -->
     <div class="counter" id="counter" aria-hidden="true">
-      <span class="counter__now" id="counterNow">01</span><span class="counter__sep"></span><span>04</span>
+      <span class="counter__now" id="counterNow">01</span><span class="counter__sep"></span><span>06</span>
     </div>
 
-    <!-- Callouts -->
+    <!-- Callouts (uno por paso del scroll; el orden importa, ver STEPS en script.js) -->
     <section class="callouts" aria-live="polite">
       <article class="callout" data-side="left">
         <span class="callout__index">01</span>
@@ -84,13 +90,27 @@
 
       <article class="callout" data-side="left">
         <span class="callout__index">03</span>
+        <h2>LAYER<br />BY LAYER</h2>
+        <i class="callout__line"></i>
+        <p>Caja, bisel, esfera y mecanismo: cada capa, una sola pieza.</p>
+      </article>
+
+      <article class="callout" data-side="right">
+        <span class="callout__index">04</span>
+        <h2>MECHANICAL<br />HEART</h2>
+        <i class="callout__line"></i>
+        <p>Calibre 3235. 70 horas de reserva de marcha.</p>
+      </article>
+
+      <article class="callout" data-side="left">
+        <span class="callout__index">05</span>
         <h2>OYSTER<br />BRACELET</h2>
         <i class="callout__line"></i>
         <p>Acero 904L, eslabones macizos y extensión Glidelock.</p>
       </article>
 
       <article class="callout" data-side="center">
-        <span class="callout__index">04</span>
+        <span class="callout__index">06</span>
         <h2>SWISS<br />MADE</h2>
         <i class="callout__line"></i>
         <p>Cronómetro superlativo, certificado oficialmente.</p>
