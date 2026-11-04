@@ -3,11 +3,30 @@
    limón, hojas, tazón y partículas de especias. Todo en código.
    ===================================================================== */
 import * as THREE from "three";
-import { labelTexture, lidTexture, sauceTexture, ridgeTexture, limeTexture, rng } from "./textures.js";
+import { labelTexture, lidTexture, sauceTextures, ridgeTexture, limeTexture, rng } from "./textures.js";
 
 const V = (x, y) => new THREE.Vector2(x, y);
 const cache = new Map();
 const once = (k, fn) => (cache.has(k) ? cache.get(k) : (cache.set(k, fn()), cache.get(k)));
+
+/* texturas por sabor (se generan una sola vez y se reutilizan) */
+export function flavorTextures(flavor) {
+  return once("fl:" + flavor.name, () => {
+    const sauce = sauceTextures(flavor, flavor.name.length + 2);
+    sauce.map.repeat.set(3, 1.5); sauce.bump.repeat.set(3, 1.5);
+    return { label: labelTexture(flavor), lid: lidTexture(flavor), sauce };
+  });
+}
+/* cambia el sabor de un frasco ya creado (etiqueta, tapa y salsa) */
+export function setJarFlavor(jar, flavor) {
+  const t = flavorTextures(flavor), u = jar.userData;
+  u.label.material.map = t.label;
+  u.top.material.map = t.lid;
+  u.sauce.material.map = t.sauce.map;
+  u.sauce.material.bumpMap = t.sauce.bump;
+  u.sauce.material.sheenColor.set(flavor.light);
+  [u.label, u.top, u.sauce].forEach((m) => (m.material.needsUpdate = true));
+}
 
 /* ======================= FRASCO ======================= */
 // Medidas (unidades de mundo): alto 1.5, radio 0.52. Pivote en el centro.
@@ -42,11 +61,15 @@ export function createJar(flavor, { lowPoly = false } = {}) {
   glass.castShadow = true;
   body.add(glass);
 
-  const sauceTex = sauceTexture(flavor, flavor.name.length);
-  sauceTex.repeat.set(3, 1.4);
+  const tx = flavorTextures(flavor);
+  // salsa: color con pulpa + relieve; el brillo lo pone el vidrio
   const sauce = new THREE.Mesh(
     once("sauce" + seg, () => new THREE.LatheGeometry(SAUCE_PROFILE, seg)),
-    new THREE.MeshPhysicalMaterial({ map: sauceTex, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.2 }),
+    new THREE.MeshPhysicalMaterial({
+      map: tx.sauce.map, bumpMap: tx.sauce.bump, bumpScale: 1.4,
+      roughness: 0.55, clearcoat: 0.2, clearcoatRoughness: 0.35,
+      sheen: 0.6, sheenRoughness: 0.4, sheenColor: new THREE.Color(flavor.light),
+    }),
   );
   sauce.castShadow = true;
   body.add(sauce);
@@ -54,7 +77,7 @@ export function createJar(flavor, { lowPoly = false } = {}) {
   // etiqueta: cilindro abierto, el frente (u = .5) mira a +Z
   const label = new THREE.Mesh(
     once("label" + seg, () => new THREE.CylinderGeometry(0.526, 0.526, 0.8, seg, 1, true, -Math.PI, Math.PI * 2)),
-    new THREE.MeshStandardMaterial({ map: labelTexture(flavor), roughness: 0.55, metalness: 0.05 }),
+    new THREE.MeshPhysicalMaterial({ map: tx.label, roughness: 0.62, metalness: 0, sheen: 0.3, sheenColor: new THREE.Color(0xffffff) }),
   );
   label.position.y = 0.6;
   label.castShadow = true;
@@ -67,17 +90,17 @@ export function createJar(flavor, { lowPoly = false } = {}) {
   ridges.wrapS = THREE.RepeatWrapping; ridges.repeat.set(1, 1);
   const lidSide = new THREE.Mesh(
     once("lidside" + seg, () => new THREE.CylinderGeometry(0.405, 0.405, 0.18, seg * 2, 1, true)),
-    new THREE.MeshStandardMaterial({ color: 0x141110, metalness: 0.7, roughness: 0.32, bumpMap: ridges, bumpScale: 2.2 }),
+    new THREE.MeshStandardMaterial({ color: 0x0f3d2e, metalness: 0.75, roughness: 0.3, bumpMap: ridges, bumpScale: 2.2 }),
   );
   lidSide.position.y = 1.415;
   const rim = new THREE.Mesh(
     once("rim" + seg, () => new THREE.TorusGeometry(0.39, 0.017, 16, seg)),
-    new THREE.MeshStandardMaterial({ color: 0x141110, metalness: 0.7, roughness: 0.3 }),
+    new THREE.MeshStandardMaterial({ color: 0x0f3d2e, metalness: 0.75, roughness: 0.3 }),
   );
   rim.rotation.x = Math.PI / 2; rim.position.y = 1.505;
   const top = new THREE.Mesh(
     once("lidtop" + seg, () => new THREE.CircleGeometry(0.392, seg)),
-    new THREE.MeshPhysicalMaterial({ map: lidTexture(flavor), metalness: 0.35, roughness: 0.35, clearcoat: 0.5 }),
+    new THREE.MeshPhysicalMaterial({ map: tx.lid, metalness: 0.3, roughness: 0.38, clearcoat: 0.5 }),
   );
   top.rotation.x = -Math.PI / 2; top.position.y = 1.512;
   const under = new THREE.Mesh(once("lidunder", () => new THREE.CircleGeometry(0.4, 48)), new THREE.MeshStandardMaterial({ color: 0x0b0908, side: THREE.DoubleSide }));
@@ -86,7 +109,7 @@ export function createJar(flavor, { lowPoly = false } = {}) {
   lid.add(lidSide, rim, top, under);
   body.add(lid);
 
-  root.userData = { lid, body, glass, label, top };
+  root.userData = { lid, body, glass, label, top, sauce };
   return root;
 }
 
@@ -259,9 +282,8 @@ export function createBowl(flavor, color = 0x15110e) {
   const prof = [V(0, 0), V(0.42, 0), V(0.46, 0.04), V(0.68, 0.14), V(0.84, 0.32), V(0.9, 0.46), V(0.89, 0.48), V(0.86, 0.48), V(0.83, 0.44), V(0.77, 0.32), V(0.62, 0.17), V(0.4, 0.1), V(0, 0.09)];
   const bowl = new THREE.Mesh(new THREE.LatheGeometry(prof, 96), new THREE.MeshPhysicalMaterial({ color, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.1 }));
   bowl.castShadow = true; bowl.receiveShadow = true;
-  const tex = sauceTexture(flavor, 17);
-  tex.repeat.set(1.3, 1.3);
-  const surf = new THREE.Mesh(new THREE.CircleGeometry(0.79, 96), new THREE.MeshPhysicalMaterial({ map: tex, roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.45, envMapIntensity: 0.6 }));
+  const { map, bump } = flavorTextures(flavor).sauce;
+  const surf = new THREE.Mesh(new THREE.CircleGeometry(0.79, 96), new THREE.MeshPhysicalMaterial({ map, bumpMap: bump, bumpScale: 4, roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, envMapIntensity: 0.6 }));
   surf.rotation.x = -Math.PI / 2; surf.position.y = 0.38;
   surf.receiveShadow = true;
   const g = new THREE.Group();

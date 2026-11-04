@@ -9,6 +9,6 @@ El teléfono está modelado en 3D dentro de `script.js` (no usa imágenes), por 
 
 ---
 
-## Nuevo: BRASA — salsa gourmet 3D (`salsa/`)
+## Nuevo: MAGMA — salsa volcánica 3D (`salsa/`)
 
 Landing estilo Awwwards con un frasco 3D procedural, GSAP ScrollTrigger y Lenis. No necesita imágenes. Ver [`salsa/README.md`](salsa/README.md).

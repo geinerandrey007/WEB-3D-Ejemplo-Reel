@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>BRASA — Salsa gourmet de chile ahumado</title>
-  <meta name="description" content="BRASA: salsa gourmet hecha a mano. Chile ahumado, ajo asado y tomate madurado al sol." />
-  <meta name="theme-color" content="#E8530E" />
+  <title>MAGMA — Salsa volcánica gourmet</title>
+  <meta name="description" content="MAGMA: salsa volcánica gourmet hecha a mano en Costa Rica. Chiles ahumados, ajo tostado y tomate asado." />
+  <meta name="theme-color" content="#0F3D2E" />
   <link rel="preload" href="fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="style.css" />
   <script type="importmap">
@@ -16,10 +16,10 @@
 
   <!-- ============================ LOADER ============================ -->
   <div class="loader" id="loader" aria-hidden="true">
-    <div class="loader__brand">BRASA</div>
+    <div class="loader__brand">MAGMA</div>
     <div class="loader__count"><span id="loaderCount">0</span>%</div>
     <div class="loader__bar"><i id="loaderBar"></i></div>
-    <div class="loader__label" id="loaderLabel">Encendiendo el fuego…</div>
+    <div class="loader__label" id="loaderLabel">Calentando el volcán…</div>
   </div>
 
   <!-- ============================ CAPAS FIJAS ============================ -->
@@ -29,7 +29,7 @@
 
   <!-- ============================ NAV ============================ -->
   <header class="nav" id="nav">
-    <a href="#top" class="nav__logo" data-magnetic>BRASA</a>
+    <a href="#top" class="nav__logo" data-magnetic>MAGMA</a>
     <nav class="nav__pills">
       <a href="#sabores" class="pill" data-magnetic>Sabores</a>
       <a href="#historia" class="pill" data-magnetic>Historia</a>
@@ -51,49 +51,55 @@
       <section class="s s--hero" data-step="0">
         <h1 class="mega mega--hero">
           <span class="split">SABOR</span>
-          <span class="split">BRUTAL</span>
+          <span class="split">VOLCÁNICO</span>
         </h1>
-        <p class="hero__kicker"><b>Chile ahumado</b> · salsa gourmet hecha a mano</p>
+        <p class="hero__kicker"><b id="heroFlavor">Lava Ahumada</b> · salsa volcánica hecha a mano</p>
         <div class="hero__foot">
-          <p>Chipotle ahumado en leña, ajo asado y tomate madurado al sol. Lotes de 200 frascos. Nada más.</p>
-          <a href="#frasco" class="btn" data-magnetic><span>Comprar · ₡4.900</span></a>
+          <p>Chiles ahumados con leña de café, ajo tostado y tomate asado al carbón. Lotes de 300 frascos.</p>
+          <a href="#frasco" class="btn btn--lime" data-magnetic><span>Comprar · ₡5.500</span></a>
         </div>
+        <div class="hero__flavors" id="flavorPicker" role="tablist" aria-label="Elegí un sabor">
+          <button class="fchip is-active" data-flavor="0" style="--c:#FF4D1F" role="tab"><i></i><span>Ahumada</span></button>
+          <button class="fchip" data-flavor="1" style="--c:#D7F75B" role="tab"><i></i><span>Jalapeño</span></button>
+          <button class="fchip" data-flavor="2" style="--c:#FFB020" role="tab"><i></i><span>Habanero</span></button>
+        </div>
+        <div class="drag-hint" id="dragHint">↔ Arrastrá para girar</div>
         <div class="hero__scroll"><i></i>Scroll</div>
       </section>
 
       <!-- 2 · NUEVO ÁNGULO -->
       <section class="s s--angle" data-step="1">
-        <div class="marquee" aria-label="Un nuevo ángulo">
-          <div class="marquee__row" id="marquee1">UN NUEVO ÁNGULO — UN NUEVO ÁNGULO — UN NUEVO ÁNGULO —&nbsp;</div>
-          <div class="marquee__row marquee__row--outline" id="marquee2">DEL PICANTE — DEL PICANTE — DEL PICANTE — DEL PICANTE —&nbsp;</div>
+        <div class="marquee" aria-label="Entra en erupción">
+          <div class="marquee__row" id="marquee1">ENTRA EN ERUPCIÓN — ENTRA EN ERUPCIÓN — ENTRA EN ERUPCIÓN —&nbsp;</div>
+          <div class="marquee__row marquee__row--outline" id="marquee2">CALOR CON CARÁCTER — CALOR CON CARÁCTER — CALOR CON CARÁCTER —&nbsp;</div>
         </div>
-        <p class="caption caption--br">01 — No es otra salsa roja.<br/>Es fuego con carácter.</p>
+        <p class="caption caption--br">01 — No es otra salsa picante.<br/>Es lava que se come.</p>
       </section>
 
       <!-- 3 · DESTAPÁ -->
       <section class="s s--unwrap" data-step="2">
         <h2 class="mega mega--center">
           <span class="split">DESTAPÁ</span>
-          <span class="split">LA AVENTURA</span>
+          <span class="split">EL VOLCÁN</span>
         </h2>
-        <p class="caption caption--bl">02 — Abrí el frasco.<br/>El humo hace el resto.</p>
+        <p class="caption caption--bl">02 — Abrí el frasco.<br/>La erupción hace el resto.</p>
       </section>
 
       <!-- 4 · VISTA SUPERIOR -->
       <section class="s s--top" data-step="3">
         <svg class="ring" id="ring" viewBox="0 0 400 400" aria-hidden="true">
           <defs><path id="ringPath" d="M200,200 m-170,0 a170,170 0 1,1 340,0 a170,170 0 1,1 -340,0"/></defs>
-          <text><textPath href="#ringPath">HECHO A MANO · LOTES PEQUEÑOS · 100% NATURAL · AHUMADO EN LEÑA · </textPath></text>
+          <text><textPath href="#ringPath">HECHA A MANO · LOTES PEQUEÑOS · 100% NATURAL · AHUMADA CON LEÑA DE CAFÉ · </textPath></text>
         </svg>
         <p class="caption caption--tl">03 — Sellado al vacío,<br/>firmado a mano.</p>
-        <p class="caption caption--br">Lote Nº 027 / 200</p>
+        <p class="caption caption--br">Lote Nº 041 / 300</p>
       </section>
 
       <!-- 5 · PERSPECTIVA -->
       <section class="s s--persp" data-step="4">
         <h2 class="mega mega--left">
-          <span class="split">PERSPECTIVA</span>
-          <span class="split">DE SABOR</span>
+          <span class="split">CALOR CON</span>
+          <span class="split">CARÁCTER</span>
         </h2>
         <ul class="stats">
           <li><b data-count="7">0</b><span>ingredientes reales</span></li>
@@ -112,18 +118,18 @@
       <div class="split-sec__left">
         <ul class="checklist">
           <li><i></i>Chiles seleccionados a mano</li>
-          <li><i></i>Ahumado lento con leña de guayabo</li>
+          <li><i></i>Ahumados lento con leña de café</li>
           <li><i></i>Sin azúcar añadida ni espesantes</li>
         </ul>
         <div class="nos">
           <p><span>SIN</span> RELLENOS.</p>
           <p><span>SIN</span> ATAJOS.</p>
-          <p><span>SIN</span> MIEDO.</p>
+          <p><span>SIN</span> PIEDAD.</p>
         </div>
       </div>
       <div class="split-sec__right">
         <figure class="reveal-img">
-          <img data-render="explosion" alt="Frasco de BRASA rodeado de chiles" />
+          <img data-render="explosion" alt="Frasco de MAGMA rodeado de chiles" />
         </figure>
       </div>
     </section>
@@ -132,14 +138,14 @@
     <section class="tradition" id="historia">
       <div class="tradition__text">
         <h2 class="big">
-          <span class="split">TRADICIÓN</span>
-          <span class="split">&amp; FUEGO</span>
+          <span class="split">NACIDA AL PIE</span>
+          <span class="split">DEL VOLCÁN</span>
         </h2>
-        <p>La receta viene de la cocina de la abuela: chiles secados al sol, ahumados una noche entera y molidos en piedra. Nosotros solo la pusimos en frasco.</p>
-        <span class="stamp">Desde<br/><b>1987</b></span>
+        <p>Los chiles crecen en tierra volcánica, se ahúman una noche entera con leña de café y se muelen en piedra. Esa tierra se siente en cada cucharada.</p>
+        <span class="stamp">Tierra<br/><b>volcánica</b></span>
       </div>
       <figure class="tradition__img parallax">
-        <img data-render="bowl" alt="Tazón de salsa BRASA con chiles y cilantro" />
+        <img data-render="bowl" alt="Tazón de salsa MAGMA con chiles y culantro" />
       </figure>
     </section>
 
@@ -147,7 +153,7 @@
     <section class="zoom" id="zoom">
       <div class="zoom__pin">
         <figure class="zoom__card" id="zoomCard">
-          <img data-render="flatlay" alt="Ingredientes de BRASA vistos desde arriba" />
+          <img data-render="flatlay" alt="Ingredientes de MAGMA vistos desde arriba" />
         </figure>
         <h3 class="zoom__title"><span>Lo que ves</span><span>es lo que comés</span></h3>
       </div>
@@ -167,24 +173,38 @@
       </div>
     </section>
 
+    <!-- =================== RESEÑAS (cinta infinita) =================== -->
+    <section class="reviews" aria-label="Reseñas">
+      <div class="reviews__row">
+        <p class="review"><em>★★★★★</em><b>“Le pongo a todo.”</b><span>— Andrea, Heredia</span></p>
+        <p class="review"><em>★★★★★</em><b>“El gallo pinto nunca fue igual.”</b><span>— Pablo, San José</span></p>
+        <p class="review"><em>★★★★★</em><b>“Pica rico, no pica feo.”</b><span>— Majo, Cartago</span></p>
+        <p class="review"><em>★★★★★</em><b>“Ya voy por el tercer frasco.”</b><span>— Luis, Alajuela</span></p>
+        <p class="review" aria-hidden="true"><em>★★★★★</em><b>“Le pongo a todo.”</b><span>— Andrea, Heredia</span></p>
+        <p class="review" aria-hidden="true"><em>★★★★★</em><b>“El gallo pinto nunca fue igual.”</b><span>— Pablo, San José</span></p>
+        <p class="review" aria-hidden="true"><em>★★★★★</em><b>“Pica rico, no pica feo.”</b><span>— Majo, Cartago</span></p>
+        <p class="review" aria-hidden="true"><em>★★★★★</em><b>“Ya voy por el tercer frasco.”</b><span>— Luis, Alajuela</span></p>
+      </div>
+    </section>
+
     <!-- =================== SABORES (scroll horizontal) =================== -->
     <section class="flavors" id="sabores">
       <div class="flavors__track" id="flavorsTrack">
         <div class="flavor flavor--intro">
-          <h2 class="big"><span class="split">TRES</span><span class="split">FUEGOS</span></h2>
+          <h2 class="big"><span class="split">TRES</span><span class="split">ERUPCIONES</span></h2>
           <p>Elegí tu nivel. →</p>
         </div>
-        <article class="flavor" data-bg="#E8530E" style="background:#E8530E">
-          <img data-render="flavor0" alt="BRASA Chile Ahumado" />
-          <div class="flavor__info"><span class="flavor__n">01</span><h3>Chile Ahumado</h3><p>Chipotle, ajo asado, tomate. Profundo y humoso.</p><div class="flavor__heat">●●●●○</div></div>
+        <article class="flavor" data-bg="#FF4D1F" style="background:#FF4D1F">
+          <img data-render="flavor0" alt="MAGMA Lava Ahumada" />
+          <div class="flavor__info"><span class="flavor__n">01</span><h3>Lava Ahumada</h3><p>Chipotle, ajo tostado, tomate al carbón. Profunda y humosa.</p><div class="flavor__heat">●●●●○</div></div>
         </article>
-        <article class="flavor" data-bg="#F5B82E" style="background:#F5B82E">
-          <img data-render="flavor1" alt="BRASA Mango Habanero" />
-          <div class="flavor__info"><span class="flavor__n">02</span><h3>Mango Habanero</h3><p>Mango maduro y habanero naranja. Dulce, después explota.</p><div class="flavor__heat">●●●●●</div></div>
+        <article class="flavor" data-bg="#D7F75B" style="background:#D7F75B">
+          <img data-render="flavor1" alt="MAGMA Jalapeño Verde" />
+          <div class="flavor__info"><span class="flavor__n">02</span><h3>Jalapeño Verde</h3><p>Jalapeño fresco, tomatillo y culantro. Brillante y herbal.</p><div class="flavor__heat">●●●○○</div></div>
         </article>
-        <article class="flavor" data-bg="#E5197F" style="background:#E5197F">
-          <img data-render="flavor2" alt="BRASA Tamarindo Chipotle" />
-          <div class="flavor__info"><span class="flavor__n">03</span><h3>Tamarindo Chipotle</h3><p>Ácido, ahumado y un poco travieso.</p><div class="flavor__heat">●●●○○</div></div>
+        <article class="flavor" data-bg="#FFB020" style="background:#FFB020">
+          <img data-render="flavor2" alt="MAGMA Habanero Dorado" />
+          <div class="flavor__info"><span class="flavor__n">03</span><h3>Habanero Dorado</h3><p>Habanero naranja y maracuyá. Dulce al inicio, después erupciona.</p><div class="flavor__heat">●●●●●</div></div>
         </article>
       </div>
     </section>
@@ -193,9 +213,9 @@
     <section class="ingredients" id="ingredientes">
       <h2 class="big"><span class="split">SIETE COSAS.</span><span class="split">NINGUNA RARA.</span></h2>
       <div class="ingredients__grid">
-        <div class="ing"><img data-render="ing-chili" alt="" /><h4>Chile chipotle</h4><p>Jalapeño maduro ahumado 12 h.</p></div>
-        <div class="ing"><img data-render="ing-garlic" alt="" /><h4>Ajo asado</h4><p>Dorado lento hasta caramelizar.</p></div>
-        <div class="ing"><img data-render="ing-tomato" alt="" /><h4>Tomate</h4><p>Madurado al sol, nunca en cámara.</p></div>
+        <div class="ing"><img data-render="ing-chili" alt="" /><h4>Chile chipotle</h4><p>Ahumado 12 h con leña de café.</p></div>
+        <div class="ing"><img data-render="ing-garlic" alt="" /><h4>Ajo asado</h4><p>Tostado lento hasta caramelizar.</p></div>
+        <div class="ing"><img data-render="ing-tomato" alt="" /><h4>Tomate</h4><p>Asado al carbón, piel y todo.</p></div>
         <div class="ing"><img data-render="ing-pepper" alt="" /><h4>Pimienta negra</h4><p>Molida en piedra el mismo día.</p></div>
         <div class="ing"><img data-render="ing-lime" alt="" /><h4>Limón mandarina</h4><p>Acidez brillante y natural.</p></div>
         <div class="ing"><img data-render="ing-leaf" alt="" /><h4>Culantro</h4><p>Fresco de la huerta.</p></div>
@@ -204,14 +224,14 @@
 
     <!-- =================== EL FRASCO =================== -->
     <section class="jar-sec" id="frasco">
-      <div class="jar-sec__band"><div class="jar-sec__band-row" id="band">EL FRASCO ✺ EL FRASCO ✺ EL FRASCO ✺ EL FRASCO ✺ EL FRASCO ✺ EL FRASCO ✺&nbsp;</div></div>
+      <div class="jar-sec__band"><div class="jar-sec__band-row" id="band">EL FRASCO ▲ EL FRASCO ▲ EL FRASCO ▲ EL FRASCO ▲ EL FRASCO ▲ EL FRASCO ▲&nbsp;</div></div>
       <div class="product">
-        <figure class="product__img"><img data-render="product" alt="Frasco BRASA Chile Ahumado" /></figure>
+        <figure class="product__img"><img data-render="product" alt="Frasco MAGMA Lava Ahumada" /></figure>
         <div class="product__info">
           <span class="tag">Más vendido</span>
-          <h3>BRASA<br/>Chile Ahumado</h3>
+          <h3>MAGMA<br/>Lava Ahumada</h3>
           <p>250 ml · Picor 4/5 · Vegano · Sin gluten</p>
-          <div class="product__price">₡4.900</div>
+          <div class="product__price">₡5.500</div>
           <div class="product__buy">
             <div class="qty"><button id="qMinus" aria-label="Menos">−</button><span id="qVal">1</span><button id="qPlus" aria-label="Más">+</button></div>
             <button class="btn btn--dark" id="addCart" data-magnetic><span>Agregar al carrito</span></button>
@@ -219,8 +239,8 @@
         </div>
       </div>
       <div class="cook">
-        <h2 class="mega mega--cook"><span class="split">A</span><span class="split">COCINAR</span></h2>
-        <a href="#frasco" class="btn btn--yellow" data-magnetic><span>Comprar ahora</span></a>
+        <h2 class="mega mega--cook"><span class="split">QUE</span><span class="split">ARDA</span></h2>
+        <a href="#frasco" class="btn btn--lime" data-magnetic><span>Comprar ahora</span></a>
       </div>
     </section>
 
@@ -233,11 +253,11 @@
           <button class="btn btn--dark" data-magnetic><span>Suscribirme</span></button>
         </form>
         <div class="footer__links">
-          <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Contacto</a><span>© 2026 BRASA</span>
+          <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Contacto</a><span>© 2026 MAGMA</span>
         </div>
       </div>
       <div class="footer__right">
-        <img data-render="footer" alt="Frasco de BRASA" />
+        <img data-render="footer" alt="Frasco de MAGMA" />
       </div>
     </footer>
   </main>

@@ -28,7 +28,7 @@ export class Studio {
     pm.dispose();
   }
 
-  scene(bg, { floor = true, shadow = 0.3, key = [3, 6, 4], keyI = 2.4, rim = 0xff7a2e, rim2 = 0xff3d9a } = {}) {
+  scene(bg, { floor = true, shadow = 0.3, key = [3, 6, 4], keyI = 2.4, rim = 0xff6a2e, rim2 = 0xa8ff6a } = {}) {
     const s = new THREE.Scene();
     s.environment = this.env;
     s.background = bg == null ? null : new THREE.Color(bg);
@@ -78,7 +78,7 @@ const ground = (o) => { o.updateMatrixWorld(true); const b = new THREE.Box3().se
 export const SHOTS = {
   // Split: frasco rodeado de chiles volando, fondo magenta
   explosion: (st) => {
-    const W = 1200, H = 1500, s = st.scene(0xE5197F, { floor: false, key: [2, 5, 6], keyI: 2.8 });
+    const W = 1200, H = 1500, s = st.scene(0xFF4D1F, { floor: false, key: [2, 5, 6], keyI: 2.8, rim2: 0xffe08a });
     s.add(put(createJar(FLAVORS[0]), [0, -0.1, 0], [0.12, -0.5, -0.22], 1.25));
     const r = rng(42);
     const kinds = ["red", "red", "deep", "orange", "red", "green", "red", "deep"];
@@ -95,7 +95,7 @@ export const SHOTS = {
 
   // Tradición: tazón con salsa y guarnición, vista 3/4, fondo naranja
   bowl: (st) => {
-    const W = 1200, H = 1500, s = st.scene(0xE8530E, { shadow: 0.35, key: [-3, 7, 3] });
+    const W = 1200, H = 1500, s = st.scene(0x0F3D2E, { shadow: 0.45, key: [-3, 7, 3] });
     s.add(put(createBowl(FLAVORS[0]), [0, 0, 0], [0, 0, 0], 1.2));
     const herbs = createHerbBunch(4, 4); s.add(put(herbs, [0.15, 0.5, 0.1], [0, 0.6, 0], 0.55));
     s.add(put(createChili("red", 2, 0.9), [-0.25, 0.53, -0.15], [Math.PI / 2, 0, 0.9], 1));
@@ -110,7 +110,7 @@ export const SHOTS = {
 
   // Zoom: flat lay cenital de ingredientes, fondo café oscuro
   flatlay: (st) => {
-    const W = 1800, H = 1100, s = st.scene(0x2A1208, { shadow: 0.5, key: [-2, 8, 2.5], rim: 0xffb36b, rim2: 0xff5a9a });
+    const W = 1800, H = 1100, s = st.scene(0x0E1A15, { shadow: 0.55, key: [-2, 8, 2.5], rim: 0xffb36b });
     s.add(put(createBowl(FLAVORS[0], 0xf4ead8), [-0.9, 0, 0.1], [0, 0, 0], 1.05));
     const jar = createJar(FLAVORS[0]); s.add(put(jar, [1.55, 0.53, -0.2], [0, 0, Math.PI / 2], 1)); jar.rotation.order = "ZYX"; jar.rotation.set(0, -0.5, Math.PI / 2);
     const r = rng(12);
@@ -130,7 +130,7 @@ export const SHOTS = {
 
   // Galería 1: frasco de pie con chiles y ajo, fondo naranja
   g1: (st) => {
-    const W = 1000, H = 1300, s = st.scene(0xE8530E, { shadow: 0.38, key: [3, 6, 4] });
+    const W = 1000, H = 1300, s = st.scene(0x0F3D2E, { shadow: 0.45, key: [3, 6, 4] });
     s.add(ground(put(createJar(FLAVORS[0]), [0, 0, 0], [0, -0.35, 0], 1.2)));
     s.add(put(createChili("red", 31, 1.1), [-0.7, 0.13, 0.95], [Math.PI / 2, 0, 0.5], 1));
     s.add(put(createChili("deep", 32, 0.9), [0.85, 0.13, 0.7], [Math.PI / 2, 0, -2.3], 1));
@@ -141,7 +141,7 @@ export const SHOTS = {
 
   // Galería 2: colección de 3 sabores
   g2: (st) => {
-    const W = 1500, H = 900, s = st.scene(0x1b120c, { shadow: 0.6, key: [2, 6, 5], keyI: 2.2 });
+    const W = 1500, H = 900, s = st.scene(0x0b1511, { shadow: 0.6, key: [2, 6, 5], keyI: 2.2 });
     [[-1.45, 0.35, 0.4], [0, 0, -0.1], [1.45, 0.35, -0.6]].forEach(([x, z, ry], i) => s.add(ground(put(createJar(FLAVORS[i]), [x, 0, z], [0, ry, 0], 1))));
     s.add(put(createChili("red", 40, 0.9), [-2.4, 0.12, 0.9], [Math.PI / 2, 0, 0.8], 1));
     s.add(put(createChili("orange", 41, 0.8), [2.4, 0.12, 0.8], [Math.PI / 2, 0, -2.5], 1));
@@ -150,7 +150,7 @@ export const SHOTS = {
 
   // Galería 3: primer plano de la tapa, fondo magenta
   g3: (st) => {
-    const W = 900, H = 900, s = st.scene(0xE5197F, { shadow: 0.35, key: [-2, 6, 3] });
+    const W = 900, H = 900, s = st.scene(0xFF4D1F, { shadow: 0.35, key: [-2, 6, 3] });
     s.add(ground(put(createJar(FLAVORS[0]), [0, 0, 0], [0, 0.3, 0], 1)));
     s.add(put(createLeaf(3, 1), [0.55, 1.53, 0.1], [-Math.PI / 2 + 0.2, 0, 0.6], 0.6));
     return st.shoot(s, st.cam(26, W, H, [0, 4.6, 2.7], [0, 1.15, 0]), W, H);
@@ -158,7 +158,7 @@ export const SHOTS = {
 
   // Galería 4: tazón cenital, fondo amarillo
   g4: (st) => {
-    const W = 1100, H = 900, s = st.scene(0xF5B82E, { shadow: 0.4, key: [-3, 8, 2] });
+    const W = 1100, H = 900, s = st.scene(0xD7F75B, { shadow: 0.4, key: [-3, 8, 2] });
     s.add(put(createBowl(FLAVORS[1], 0x15110e), [0, 0, 0], [0, 0, 0], 1.25));
     s.add(put(createHerbBunch(11, 5), [0.1, 0.5, 0.1], [0, 1.1, 0], 0.55));
     s.add(put(createChili("orange", 51, 1), [-1.7, 0.12, 0.5], [Math.PI / 2, 0, 1.0], 1));
@@ -169,7 +169,7 @@ export const SHOTS = {
 
   // Producto: frasco 3/4 sobre magenta
   product: (st) => {
-    const W = 1100, H = 1100, s = st.scene(0xE5197F, { shadow: 0.4, key: [3, 6, 5] });
+    const W = 1100, H = 1100, s = st.scene(0xFF4D1F, { shadow: 0.4, key: [3, 6, 5] });
     s.add(ground(put(createJar(FLAVORS[0]), [0, 0, 0], [0, -0.25, 0], 1.25)));
     s.add(put(createChili("red", 61, 1.1), [1.0, 0.13, 0.75], [Math.PI / 2, 0, -2.4], 1));
     s.add(put(createHerbBunch(5, 4), [-1.0, 0.03, 0.7], [0, 0.9, 0], 0.6));
@@ -178,7 +178,7 @@ export const SHOTS = {
 
   // Footer: frasco enorme inclinado sobre magenta
   footer: (st) => {
-    const W = 1000, H = 1400, s = st.scene(0xE5197F, { floor: false, key: [3, 4, 6] });
+    const W = 1000, H = 1400, s = st.scene(0x0F3D2E, { floor: false, key: [3, 4, 6] });
     s.add(put(createJar(FLAVORS[0]), [0.2, -0.2, 0], [0.1, -0.6, 0.28], 2.1));
     s.add(createFlakes(90, 8, [4, 6, 2]));
     s.add(put(createChili("red", 71, 1.1), [-1.3, -1.9, 1.0], [0.4, 0.5, 2.4], 1));
@@ -189,10 +189,10 @@ export const SHOTS = {
 // Sabores: un frasco por sabor sobre su color
 FLAVORS.forEach((f, i) => {
   SHOTS["flavor" + i] = (st) => {
-    const W = 1000, H = 1200, bgs = [0xE8530E, 0xF5B82E, 0xE5197F];
-    const s = st.scene(bgs[i], { shadow: 0.35, key: [3, 6, 5] });
+    const W = 1000, H = 1200;
+    const s = st.scene(f.bg, { shadow: 0.35, key: [3, 6, 5] });
     s.add(ground(put(createJar(f), [0, 0, 0], [0, -0.3, 0], 1.35)));
-    const kinds = [["red", "deep"], ["orange", "orange"], ["dried", "deep"]][i];
+    const kinds = [["red", "deep"], ["green", "green"], ["orange", "orange"]][i];
     s.add(put(createChili(kinds[0], 80 + i, 1.1), [-1.0, 0.13, 0.8], [Math.PI / 2, 0, 0.6], 1));
     s.add(put(createChili(kinds[1], 90 + i, 0.9), [1.05, 0.13, 0.55], [Math.PI / 2, 0, -2.2], 1));
     return st.shoot(s, st.cam(30, W, H, [0, 1.6, 7], [0, 0.95, 0]), W, H);

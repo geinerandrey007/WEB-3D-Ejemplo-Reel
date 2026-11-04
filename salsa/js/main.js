@@ -1,10 +1,10 @@
 /* =====================================================================
-   BRASA — escena 3D principal + coreografía de scroll + interacciones
+   MAGMA — escena 3D principal + coreografía de scroll + interacciones
    ===================================================================== */
 import * as THREE from "three";
 import { RoomEnvironment } from "../vendor/RoomEnvironment.js";
-import { FLAVORS, smokeTexture, patternDataURL, grainDataURL } from "./textures.js";
-import { createJar, createFlakes } from "./models.js";
+import { FLAVORS, smokeTexture, emberTexture, patternDataURL, grainDataURL } from "./textures.js";
+import { createJar, createFlakes, setJarFlavor, flavorTextures } from "./models.js";
 import { Studio, SHOTS } from "./studio.js";
 
 /* ------------------------------ AJUSTES ------------------------------
@@ -51,11 +51,11 @@ scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
 const key = new THREE.DirectionalLight(0xfff1e0, 2.6); key.position.set(3, 4, 5); scene.add(key);
 const rimA = new THREE.PointLight(0xff8a2e, 26, 20); rimA.position.set(-3.2, 2.2, -2.2); scene.add(rimA);
-const rimB = new THREE.PointLight(0xff2f8f, 18, 20); rimB.position.set(3.4, -0.6, -2); scene.add(rimB);
-const glow = new THREE.PointLight(0xffb15a, 0, 6); glow.position.set(0, 1.4, 1.2); scene.add(glow);
-scene.add(new THREE.HemisphereLight(0xfff4e8, 0x40140a, 0.45));
+const rimB = new THREE.PointLight(0x9dff6a, 14, 20); rimB.position.set(3.4, -0.6, -2); scene.add(rimB);
+const glow = new THREE.PointLight(0xff5a1f, 0, 6); glow.position.set(0, 1.4, 1.2); scene.add(glow);
+scene.add(new THREE.HemisphereLight(0xfff4e8, 0x0f3d2e, 0.45));
 
-let jar, flakes, steam = [];
+let jar, flakes, embers, steam = [];
 const pivot = new THREE.Group();   // posición/rotación de la coreografía
 pivot.rotation.order = "ZXY";      // ry = gira sobre su propio eje, rx = inclina, rz = rueda en pantalla
 const mouseG = new THREE.Group();  // parallax del mouse
@@ -70,6 +70,8 @@ const POSES = [
   { x: 0.95, y: -0.1,  z: 0,   rx: 0.3,  ry: Math.PI * 4 - 0.35,  rz: -1.2,  s: 1.05, lid: 0,    steam: 0.2,  glow: 0 },   // perspectiva
 ];
 const state = { ...POSES[0], exit: 0, intro: 0 };
+const extra = { spin: 0, pop: 0 };                             // giro del cambio de sabor
+const drag = { on: false, x: 0, rot: 0, vel: 0, used: false }; // girar arrastrando
 const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
 let running = true;
 
@@ -97,6 +99,18 @@ function buildMain() {
     scene.add(m);
     steam.push(m);
   }
+  // chispas de lava que suben (brillan más al destapar el frasco)
+  const N = touch ? 60 : 130;
+  const pos = new Float32Array(N * 3), seeds = [];
+  for (let i = 0; i < N; i++) {
+    pos[i * 3] = (Math.random() - 0.5) * 7; pos[i * 3 + 1] = (Math.random() - 0.5) * 5; pos[i * 3 + 2] = (Math.random() - 0.5) * 3;
+    seeds.push({ sp: 0.15 + Math.random() * 0.35, ph: Math.random() * 6.28, amp: 0.05 + Math.random() * 0.15 });
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  embers = new THREE.Points(g, new THREE.PointsMaterial({ map: emberTexture(), size: 0.11, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }));
+  embers.userData = { seeds };
+  scene.add(embers);
 }
 
 const tmpV = new THREE.Vector3();
@@ -113,8 +127,13 @@ function tick() {
 
     const intro = state.intro;
     pivot.position.set(state.x * f.x, state.y - f.y + Math.sin(t * 1.3) * 0.04 + state.exit * 3.6 + (1 - intro) * -0.6, state.z);
-    pivot.rotation.set(state.rx + Math.sin(t * 0.9) * 0.03, state.ry + Math.sin(t * 0.45) * 0.22 + (1 - intro) * -2.4, state.rz + Math.cos(t * 0.8) * 0.02);
-    pivot.scale.setScalar(state.s * f.s * (0.6 + 0.4 * intro) * (1 - state.exit * 0.3));
+    // arrastre con inercia; al soltar vuelve suave a mostrar el frente
+    if (!drag.on) {
+      drag.rot += drag.vel; drag.vel *= 0.94;
+      if (Math.abs(drag.vel) < 0.002) drag.rot += (Math.round(drag.rot / (Math.PI * 2)) * Math.PI * 2 - drag.rot) * 0.03;
+    }
+    pivot.rotation.set(state.rx + Math.sin(t * 0.9) * 0.03, state.ry + extra.spin + drag.rot + Math.sin(t * 0.45) * 0.22 + (1 - intro) * -2.4, state.rz + Math.cos(t * 0.8) * 0.02);
+    pivot.scale.setScalar(state.s * f.s * (0.6 + 0.4 * intro) * (1 - state.exit * 0.3) * (1 + extra.pop * 0.08));
 
     const { lid } = jar.userData;
     lid.position.set(state.lid * 0.12, state.lid * 0.5, 0);
@@ -150,6 +169,17 @@ function tick() {
     flakes.children.forEach((m) => (m.instanceMatrix.needsUpdate = true));
     flakes.position.y = state.exit * 2;
 
+    // chispas
+    const ep = embers.geometry.attributes.position, es = embers.userData.seeds;
+    for (let i = 0; i < es.length; i++) {
+      let y = ep.getY(i) + dt * es[i].sp * (1 + state.glow * 1.5);
+      if (y > 2.6) y = -2.6;
+      ep.setY(i, y);
+      ep.setX(i, ep.getX(i) + Math.sin(t * 1.5 + es[i].ph) * es[i].amp * dt);
+    }
+    ep.needsUpdate = true;
+    embers.material.opacity = (0.35 + state.glow * 0.65) * intro * (1 - state.exit);
+
     renderer.render(scene, camera);
   }
 }
@@ -176,13 +206,19 @@ async function makePhotos() {
 /* ===================== TEXTO DIVIDIDO EN LETRAS ===================== */
 function splitChars() {
   $$(".split").forEach((el) => {
-    const text = el.textContent;
+    const words = el.textContent.trim().split(/\s+/);
     el.textContent = "";
-    [...text].forEach((ch) => {
-      const s = document.createElement("span");
-      s.className = "ch";
-      s.textContent = ch === " " ? " " : ch;
-      el.appendChild(s);
+    words.forEach((w, wi) => {
+      const word = document.createElement("span");
+      word.className = "w"; // las palabras no se parten entre líneas
+      [...w].forEach((ch) => {
+        const s = document.createElement("span");
+        s.className = "ch";
+        s.textContent = ch;
+        word.appendChild(s);
+      });
+      el.appendChild(word);
+      if (wi < words.length - 1) el.appendChild(document.createTextNode(" "));
     });
   });
 }
@@ -230,7 +266,7 @@ function initTimelines() {
   // ---- títulos que suben letra por letra ----
   $$(".split").forEach((el) => {
     if (el.closest(".s--hero")) return;
-    gsap.from(el.children, {
+    gsap.from(el.querySelectorAll(".ch"), {
       yPercent: 115, rotate: 6, stagger: 0.025, duration: 1.1, ease: "expo.out",
       scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none reverse" },
     });
@@ -322,6 +358,44 @@ function initInteractions() {
     el.addEventListener("pointerleave", () => { qx(0); qy(0); });
   });
 
+  // ---- selector de sabor (cambia el frasco 3D en vivo) ----
+  let current = 0, busy = false;
+  const chips = $$(".fchip"), heroFlavor = $("#heroFlavor");
+  chips.forEach((chip) => chip.addEventListener("click", () => {
+    const i = +chip.dataset.flavor;
+    if (i === current || busy) return;
+    busy = true; current = i;
+    chips.forEach((c) => c.classList.toggle("is-active", c === chip));
+    const f = FLAVORS[i];
+    document.documentElement.style.setProperty("--accent", f.accent);
+    heroFlavor.textContent = f.name;
+    glow.color.set(f.accent);
+    gsap.timeline({ onComplete: () => { extra.spin = 0; busy = false; } })
+      .to(extra, { spin: Math.PI * 2, duration: 1.3, ease: "power3.inOut" }, 0)
+      .to(extra, { pop: 1, duration: 0.45, ease: "power2.out", yoyo: true, repeat: 1 }, 0.2)
+      .call(() => setJarFlavor(jar, f), null, 0.55)
+      .fromTo(".mega--hero .split:last-child .ch", { yPercent: 0 }, { yPercent: -110, duration: 0.35, stagger: 0.02, ease: "power2.in" }, 0)
+      .fromTo(".mega--hero .split:last-child .ch", { yPercent: 110 }, { yPercent: 0, duration: 0.6, stagger: 0.02, ease: "expo.out", immediateRender: false }, 0.55);
+  }));
+
+  // ---- girar el frasco arrastrando (en el hero) ----
+  const hero = $(".s--hero"), hint = $("#dragHint");
+  hero.addEventListener("pointerdown", (e) => {
+    if (e.target.closest("a, button")) return;
+    drag.on = true; drag.x = e.clientX; drag.vel = 0;
+    hero.classList.add("is-dragging");
+    if (!drag.used) { drag.used = true; hint.classList.remove("is-on"); }
+  });
+  addEventListener("pointermove", (e) => {
+    if (!drag.on) return;
+    const dx = (e.clientX - drag.x) / innerWidth * 7;
+    drag.rot += dx; drag.vel = dx; drag.x = e.clientX;
+  });
+  addEventListener("pointerup", () => { drag.on = false; hero.classList.remove("is-dragging"); });
+  addEventListener("pointercancel", () => { drag.on = false; hero.classList.remove("is-dragging"); });
+  setTimeout(() => { if (!drag.used) hint.classList.add("is-on"); }, 3200);
+  setTimeout(() => hint.classList.remove("is-on"), 8000);
+
   // carrito
   let qty = 1, cart = 0;
   const qVal = $("#qVal"), count = $("#cartCount"), cartBtn = $("#cartBtn"), add = $("#addCart");
@@ -371,6 +445,7 @@ function intro() {
   layout();
   buildMain();
   splitChars();
+  FLAVORS.forEach((f) => flavorTextures(f)); // precalienta los otros sabores
   renderer.compile(scene, camera);
   progress(0.3);
   await frame();
