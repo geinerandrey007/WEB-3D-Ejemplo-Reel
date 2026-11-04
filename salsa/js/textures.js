@@ -242,7 +242,7 @@ export function sauceTextures(flavor, seed = 3) {
     if (pulp > 0.68) { const t = Math.min(1, (pulp - 0.68) * 3.2); col = col.map((cv, k) => cv + (F[k] - cv) * t * 0.55); }
     const i = (y * S + x) * 4;
     img.data[i] = col[0]; img.data[i + 1] = col[1]; img.data[i + 2] = col[2]; img.data[i + 3] = 255;
-    const h = 90 + base * 80 + Math.max(0, pulp - 0.6) * 220;
+    const h = 128 + (0.55 * n2(u, v) + 0.45 * n3(u, v) - 0.5) * 170 + Math.max(0, pulp - 0.7) * 110;
     bimg.data[i] = bimg.data[i + 1] = bimg.data[i + 2] = Math.min(255, h); bimg.data[i + 3] = 255;
   }
   ctx.putImageData(img, 0, 0); bctx.putImageData(bimg, 0, 0);
@@ -256,7 +256,6 @@ export function sauceTextures(flavor, seed = 3) {
     ctx.beginPath();
     for (let j = 0; j < k; j++) { const aa = a + (j / k) * 6.28, rr = s * (0.5 + r() * 0.8) * (j % 2 ? 1.7 : 1); ctx.lineTo(x + Math.cos(aa) * rr, y + Math.sin(aa) * rr * 0.6); }
     ctx.fill();
-    bctx.fillStyle = dark ? "#666" : "#ddd"; bctx.beginPath(); bctx.arc(x, y, s * 0.8, 0, 7); bctx.fill();
   }
   // semillas pequeñas, translúcidas
   for (let i = 0; i < 170; i++) {
@@ -264,7 +263,7 @@ export function sauceTextures(flavor, seed = 3) {
     ctx.fillStyle = `rgba(236,214,150,${0.55 + r() * 0.3})`;
     ctx.beginPath(); ctx.ellipse(x, y, w, h, a, 0, 7); ctx.fill();
     ctx.strokeStyle = "rgba(90,40,10,0.35)"; ctx.lineWidth = 0.8; ctx.stroke();
-    bctx.fillStyle = "#fff"; bctx.beginPath(); bctx.ellipse(x, y, w, h, a, 0, 7); bctx.fill();
+    bctx.fillStyle = "rgba(255,255,255,0.35)"; bctx.beginPath(); bctx.ellipse(x, y, w, h, a, 0, 7); bctx.fill();
   }
   // burbujas de aire pegadas al vidrio
   for (let i = 0; i < 40; i++) {
@@ -275,6 +274,59 @@ export function sauceTextures(flavor, seed = 3) {
   const map = toTex(c), bump = toTex(bc, false);
   map.wrapS = map.wrapT = bump.wrapS = bump.wrapT = THREE.RepeatWrapping;
   return { map, bump };
+}
+
+/* ---------------- SALSA PEGADA AL VIDRIO ----------------
+   Película espesa sobre la superficie + chorreones que bajan lento.
+   Es lo que hace que se lea "viscosa". Canal alfa = dónde hay salsa. */
+export function smearTexture(flavor, seed = 9) {
+  const W = 2048, H = 512;
+  const [c, ctx] = canvas(W, H);
+  const r = rng(seed);
+  const D = hex(flavor.dark), B = hex(flavor.sauce), L = hex(flavor.light);
+  const col = (t, a = 1) => `rgba(${B.map((b, k) => Math.round(t < 0 ? b + (D[k] - b) * -t : b + (L[k] - b) * t)).join()},${a})`;
+  // borde superior de la película (ondulado y continuo en u)
+  const n = valueNoise(seed, 12), n2 = valueNoise(seed + 5, 40);
+  const edge = (x) => H * (0.72 - 0.16 * n(x / W, 0.3) - 0.06 * n2(x / W, 0.6));
+  ctx.beginPath(); ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += 8) ctx.lineTo(x, edge(x));
+  ctx.lineTo(W, H); ctx.closePath();
+  const g = ctx.createLinearGradient(0, H * 0.3, 0, H);
+  g.addColorStop(0, col(0.75)); g.addColorStop(0.45, col(0.4)); g.addColorStop(1, col(0.05));
+  ctx.fillStyle = g; ctx.fill();
+  // chorreones: manchas arriba que bajan hasta la película
+  for (let i = 0; i < 28; i++) {
+    const x = r() * W, top = H * (0.25 + r() * 0.35), w = 4 + r() * 11;
+    const bottom = edge(x) + 10;
+    if (bottom <= top + 10) continue;
+    const gg = ctx.createLinearGradient(0, top, 0, bottom);
+    gg.addColorStop(0, col(0.85)); gg.addColorStop(1, col(0.5));
+    ctx.fillStyle = gg;
+    ctx.beginPath();
+    ctx.moveTo(x - w * 0.35, bottom);
+    ctx.bezierCurveTo(x - w * 0.3, top + (bottom - top) * 0.5, x - w * 0.5, top + w, x - w * 0.5, top + w * 0.6);
+    ctx.arc(x, top + w * 0.6, w * 0.5, Math.PI, 0);
+    ctx.bezierCurveTo(x + w * 0.5, top + w, x + w * 0.3, top + (bottom - top) * 0.5, x + w * 0.35, bottom);
+    ctx.closePath(); ctx.fill();
+    // gota gorda al final de algunos chorreones
+    if (r() > 0.6) { ctx.beginPath(); ctx.arc(x, top + w * 0.6, w * 0.62, 0, 7); ctx.fill(); }
+  }
+  // manchitas sueltas (salpicaduras)
+  for (let i = 0; i < 60; i++) {
+    const x = r() * W, y = H * (0.3 + r() * 0.4), rad = 2 + r() * 5;
+    if (y > edge(x)) continue;
+    ctx.fillStyle = col(0.7, 1); ctx.beginPath(); ctx.ellipse(x, y, rad * 0.6, rad * 0.6 * (1 + r()), 0, 0, 7); ctx.fill();
+  }
+  // trocitos y semillas dentro de la película
+  for (let i = 0; i < 900; i++) {
+    const x = r() * W, y = r() * H;
+    if (y < edge(x) + 4) continue;
+    ctx.fillStyle = r() > 0.7 ? "rgba(236,214,150,0.8)" : `rgba(${D.join()},0.85)`;
+    ctx.beginPath(); ctx.ellipse(x, y, 1.5 + r() * 2.5, 1 + r() * 1.5, r() * 6.28, 0, 7); ctx.fill();
+  }
+  const t = toTex(c);
+  t.wrapS = THREE.RepeatWrapping;
+  return t;
 }
 
 /* ---------------- relieve de la tapa (estrías) ---------------- */

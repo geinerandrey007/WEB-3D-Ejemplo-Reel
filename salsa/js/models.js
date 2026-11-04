@@ -3,7 +3,7 @@
    limón, hojas, tazón y partículas de especias. Todo en código.
    ===================================================================== */
 import * as THREE from "three";
-import { labelTexture, lidTexture, sauceTextures, ridgeTexture, limeTexture, rng } from "./textures.js";
+import { labelTexture, lidTexture, sauceTextures, smearTexture, ridgeTexture, limeTexture, rng } from "./textures.js";
 
 const V = (x, y) => new THREE.Vector2(x, y);
 const cache = new Map();
@@ -14,7 +14,7 @@ export function flavorTextures(flavor) {
   return once("fl:" + flavor.name, () => {
     const sauce = sauceTextures(flavor, flavor.name.length + 2);
     sauce.map.repeat.set(3, 1.5); sauce.bump.repeat.set(3, 1.5);
-    return { label: labelTexture(flavor), lid: lidTexture(flavor), sauce };
+    return { label: labelTexture(flavor), lid: lidTexture(flavor), sauce, smear: smearTexture(flavor, flavor.name.length + 9) };
   });
 }
 /* cambia el sabor de un frasco ya creado (etiqueta, tapa y salsa) */
@@ -25,7 +25,10 @@ export function setJarFlavor(jar, flavor) {
   u.sauce.material.map = t.sauce.map;
   u.sauce.material.bumpMap = t.sauce.bump;
   u.sauce.material.sheenColor.set(flavor.light);
-  [u.label, u.top, u.sauce].forEach((m) => (m.material.needsUpdate = true));
+  u.smear.material.map = t.smear;
+  u.sauce.material.emissive.set(flavor.sauce);
+  u.smear.material.emissive.set(flavor.light);
+  [u.label, u.top, u.sauce, u.smear].forEach((m) => (m.material.needsUpdate = true));
 }
 
 /* ======================= FRASCO ======================= */
@@ -37,7 +40,8 @@ const GLASS_PROFILE = [
   V(0.495, 1.1), V(0.495, 0.12), V(0.47, 0.05), V(0.42, 0.04), V(0, 0.04),
 ];
 const SAUCE_PROFILE = [
-  V(0, 0.045), V(0.43, 0.048), V(0.468, 0.06), V(0.488, 0.12), V(0.488, 1.1), V(0.48, 1.16), V(0.45, 1.2), V(0.3, 1.205), V(0, 1.205),
+  V(0, 0.045), V(0.43, 0.048), V(0.468, 0.06), V(0.488, 0.12), V(0.488, 1.0), V(0.49, 1.03), V(0.482, 1.045),
+  V(0.45, 1.05), V(0.3, 1.044), V(0, 1.04),
 ];
 
 export function glassMaterial() {
@@ -66,13 +70,22 @@ export function createJar(flavor, { lowPoly = false } = {}) {
   const sauce = new THREE.Mesh(
     once("sauce" + seg, () => new THREE.LatheGeometry(SAUCE_PROFILE, seg)),
     new THREE.MeshPhysicalMaterial({
-      map: tx.sauce.map, bumpMap: tx.sauce.bump, bumpScale: 1.4,
-      roughness: 0.55, clearcoat: 0.2, clearcoatRoughness: 0.35,
+      map: tx.sauce.map, bumpMap: tx.sauce.bump, bumpScale: 2.2,
+      roughness: 0.3, clearcoat: 0.9, clearcoatRoughness: 0.12,
+      emissive: new THREE.Color(flavor.sauce), emissiveIntensity: 0.18, // luz que "atraviesa" la salsa
       sheen: 0.6, sheenRoughness: 0.4, sheenColor: new THREE.Color(flavor.light),
     }),
   );
   sauce.castShadow = true;
   body.add(sauce);
+
+  // película de salsa pegada por dentro del vidrio (chorreones = se ve espesa)
+  const SMEAR = [V(0.4905, 0.99), V(0.4905, 1.1), V(0.4845, 1.16), V(0.4475, 1.214), V(0.4, 1.248)];
+  const smear = new THREE.Mesh(
+    once("smear" + seg, () => new THREE.LatheGeometry(SMEAR, seg)),
+    new THREE.MeshPhysicalMaterial({ map: tx.smear, alphaTest: 0.5, side: THREE.BackSide, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.08, emissive: new THREE.Color(flavor.light), emissiveIntensity: 0.35 }),
+  );
+  body.add(smear);
 
   // etiqueta: cilindro abierto, el frente (u = .5) mira a +Z
   const label = new THREE.Mesh(
@@ -109,7 +122,7 @@ export function createJar(flavor, { lowPoly = false } = {}) {
   lid.add(lidSide, rim, top, under);
   body.add(lid);
 
-  root.userData = { lid, body, glass, label, top, sauce };
+  root.userData = { lid, body, glass, label, top, sauce, smear };
   return root;
 }
 
