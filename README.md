@@ -6,3 +6,9 @@ El teléfono está modelado en 3D dentro de `script.js` (no usa imágenes), por 
 - **Textos / nombre:** título `AURA X` y callouts en `index.html`; la pantalla del teléfono (hora, widgets) se dibuja en `script.js` (`screenTex`).
 - **Ajustes rápidos:** `SCRUB`, `SCROLL_LENGTH` al inicio de `script.js`. Poses de cada paso: array `STEPS`.
 - La versión anterior (reloj con foto) está en `watch/`.
+
+---
+
+## Nuevo: BRASA — salsa gourmet 3D (`salsa/`)
+
+Landing estilo Awwwards con un frasco 3D procedural, GSAP ScrollTrigger y Lenis. No necesita imágenes. Ver [`salsa/README.md`](salsa/README.md).

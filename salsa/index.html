@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BRASA — Salsa gourmet de chile ahumado</title>
+  <meta name="description" content="BRASA: salsa gourmet hecha a mano. Chile ahumado, ajo asado y tomate madurado al sol." />
+  <meta name="theme-color" content="#E8530E" />
+  <link rel="preload" href="fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.js" } }
+  </script>
+</head>
+<body class="is-loading">
+
+  <!-- ============================ LOADER ============================ -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__brand">BRASA</div>
+    <div class="loader__count"><span id="loaderCount">0</span>%</div>
+    <div class="loader__bar"><i id="loaderBar"></i></div>
+    <div class="loader__label" id="loaderLabel">Encendiendo el fuego…</div>
+  </div>
+
+  <!-- ============================ CAPAS FIJAS ============================ -->
+  <canvas class="gl" id="gl" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" id="cursor" aria-hidden="true"><i></i></div>
+
+  <!-- ============================ NAV ============================ -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__logo" data-magnetic>BRASA</a>
+    <nav class="nav__pills">
+      <a href="#sabores" class="pill" data-magnetic>Sabores</a>
+      <a href="#historia" class="pill" data-magnetic>Historia</a>
+      <a href="#ingredientes" class="pill" data-magnetic>Ingredientes</a>
+      <a href="#frasco" class="pill pill--dark" data-magnetic>Tienda</a>
+    </nav>
+    <button class="nav__cart" id="cartBtn" data-magnetic aria-label="Carrito">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 7h12l-1 13H7L6 7Zm3 0a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      <span id="cartCount">0</span>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- =================== HISTORIA 3D (frasco fijo + scroll) =================== -->
+    <div class="story" id="story">
+
+      <!-- 1 · HERO -->
+      <section class="s s--hero" data-step="0">
+        <h1 class="mega mega--hero">
+          <span class="split">SABOR</span>
+          <span class="split">BRUTAL</span>
+        </h1>
+        <p class="hero__kicker"><b>Chile ahumado</b> · salsa gourmet hecha a mano</p>
+        <div class="hero__foot">
+          <p>Chipotle ahumado en leña, ajo asado y tomate madurado al sol. Lotes de 200 frascos. Nada más.</p>
+          <a href="#frasco" class="btn" data-magnetic><span>Comprar · ₡4.900</span></a>
+        </div>
+        <div class="hero__scroll"><i></i>Scroll</div>
+      </section>
+
+      <!-- 2 · NUEVO ÁNGULO -->
+      <section class="s s--angle" data-step="1">
+        <div class="marquee" aria-label="Un nuevo ángulo">
+          <div class="marquee__row" id="marquee1">UN NUEVO ÁNGULO — UN NUEVO ÁNGULO — UN NUEVO ÁNGULO —&nbsp;</div>
+          <div class="marquee__row marquee__row--outline" id="marquee2">DEL PICANTE — DEL PICANTE — DEL PICANTE — DEL PICANTE —&nbsp;</div>
+        </div>
+        <p class="caption caption--br">01 — No es otra salsa roja.<br/>Es fuego con carácter.</p>
+      </section>
+
+      <!-- 3 · DESTAPÁ -->
+      <section class="s s--unwrap" data-step="2">
+        <h2 class="mega mega--center">
+          <span class="split">DESTAPÁ</span>
+          <span class="split">LA AVENTURA</span>
+        </h2>
+        <p class="caption caption--bl">02 — Abrí el frasco.<br/>El humo hace el resto.</p>
+      </section>
+
+      <!-- 4 · VISTA SUPERIOR -->
+      <section class="s s--top" data-step="3">
+        <svg class="ring" id="ring" viewBox="0 0 400 400" aria-hidden="true">
+          <defs><path id="ringPath" d="M200,200 m-170,0 a170,170 0 1,1 340,0 a170,170 0 1,1 -340,0"/></defs>
+          <text><textPath href="#ringPath">HECHO A MANO · LOTES PEQUEÑOS · 100% NATURAL · AHUMADO EN LEÑA · </textPath></text>
+        </svg>
+        <p class="caption caption--tl">03 — Sellado al vacío,<br/>firmado a mano.</p>
+        <p class="caption caption--br">Lote Nº 027 / 200</p>
+      </section>
+
+      <!-- 5 · PERSPECTIVA -->
+      <section class="s s--persp" data-step="4">
+        <h2 class="mega mega--left">
+          <span class="split">PERSPECTIVA</span>
+          <span class="split">DE SABOR</span>
+        </h2>
+        <ul class="stats">
+          <li><b data-count="7">0</b><span>ingredientes reales</span></li>
+          <li><b data-count="0">0</b><span>conservantes</span></li>
+          <li><b data-count="12">0</b><span>horas de ahumado</span></li>
+        </ul>
+        <div class="heat">
+          <span>Picor</span>
+          <div class="heat__chilis"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- =================== SPLIT · SIN RELLENOS =================== -->
+    <section class="split-sec" id="split">
+      <div class="split-sec__left">
+        <ul class="checklist">
+          <li><i></i>Chiles seleccionados a mano</li>
+          <li><i></i>Ahumado lento con leña de guayabo</li>
+          <li><i></i>Sin azúcar añadida ni espesantes</li>
+        </ul>
+        <div class="nos">
+          <p><span>SIN</span> RELLENOS.</p>
+          <p><span>SIN</span> ATAJOS.</p>
+          <p><span>SIN</span> MIEDO.</p>
+        </div>
+      </div>
+      <div class="split-sec__right">
+        <figure class="reveal-img">
+          <img data-render="explosion" alt="Frasco de BRASA rodeado de chiles" />
+        </figure>
+      </div>
+    </section>
+
+    <!-- =================== TRADICIÓN =================== -->
+    <section class="tradition" id="historia">
+      <div class="tradition__text">
+        <h2 class="big">
+          <span class="split">TRADICIÓN</span>
+          <span class="split">&amp; FUEGO</span>
+        </h2>
+        <p>La receta viene de la cocina de la abuela: chiles secados al sol, ahumados una noche entera y molidos en piedra. Nosotros solo la pusimos en frasco.</p>
+        <span class="stamp">Desde<br/><b>1987</b></span>
+      </div>
+      <figure class="tradition__img parallax">
+        <img data-render="bowl" alt="Tazón de salsa BRASA con chiles y cilantro" />
+      </figure>
+    </section>
+
+    <!-- =================== ZOOM FOTO =================== -->
+    <section class="zoom" id="zoom">
+      <div class="zoom__pin">
+        <figure class="zoom__card" id="zoomCard">
+          <img data-render="flatlay" alt="Ingredientes de BRASA vistos desde arriba" />
+        </figure>
+        <h3 class="zoom__title"><span>Lo que ves</span><span>es lo que comés</span></h3>
+      </div>
+    </section>
+
+    <!-- =================== GALERÍA =================== -->
+    <section class="gallery">
+      <div class="gallery__head">
+        <h2 class="big"><span class="split">EN LA MESA</span></h2>
+        <p>Tacos, gallo pinto, huevos, pizza, lo que sea. Una cucharada y cambia todo.</p>
+      </div>
+      <div class="gallery__grid">
+        <figure class="g g--a"><img data-render="g1" alt="" /><figcaption>Chipotle &amp; ajo</figcaption></figure>
+        <figure class="g g--b"><img data-render="g2" alt="" /><figcaption>La colección</figcaption></figure>
+        <figure class="g g--c"><img data-render="g3" alt="" /><figcaption>Sellado a mano</figcaption></figure>
+        <figure class="g g--d"><img data-render="g4" alt="" /><figcaption>Directo al tazón</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- =================== SABORES (scroll horizontal) =================== -->
+    <section class="flavors" id="sabores">
+      <div class="flavors__track" id="flavorsTrack">
+        <div class="flavor flavor--intro">
+          <h2 class="big"><span class="split">TRES</span><span class="split">FUEGOS</span></h2>
+          <p>Elegí tu nivel. →</p>
+        </div>
+        <article class="flavor" data-bg="#E8530E" data-ink="#0E0B08">
+          <img data-render="flavor0" alt="BRASA Chile Ahumado" />
+          <div class="flavor__info"><span class="flavor__n">01</span><h3>Chile Ahumado</h3><p>Chipotle, ajo asado, tomate. Profundo y humoso.</p><div class="flavor__heat">●●●●○</div></div>
+        </article>
+        <article class="flavor" data-bg="#F5B82E" data-ink="#0E0B08">
+          <img data-render="flavor1" alt="BRASA Mango Habanero" />
+          <div class="flavor__info"><span class="flavor__n">02</span><h3>Mango Habanero</h3><p>Mango maduro y habanero naranja. Dulce, después explota.</p><div class="flavor__heat">●●●●●</div></div>
+        </article>
+        <article class="flavor" data-bg="#E5197F" data-ink="#0E0B08">
+          <img data-render="flavor2" alt="BRASA Tamarindo Chipotle" />
+          <div class="flavor__info"><span class="flavor__n">03</span><h3>Tamarindo Chipotle</h3><p>Ácido, ahumado y un poco travieso.</p><div class="flavor__heat">●●●○○</div></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =================== INGREDIENTES =================== -->
+    <section class="ingredients" id="ingredientes">
+      <h2 class="big"><span class="split">SIETE COSAS.</span><span class="split">NINGUNA RARA.</span></h2>
+      <div class="ingredients__grid">
+        <div class="ing"><img data-render="ing-chili" alt="" /><h4>Chile chipotle</h4><p>Jalapeño maduro ahumado 12 h.</p></div>
+        <div class="ing"><img data-render="ing-garlic" alt="" /><h4>Ajo asado</h4><p>Dorado lento hasta caramelizar.</p></div>
+        <div class="ing"><img data-render="ing-tomato" alt="" /><h4>Tomate</h4><p>Madurado al sol, nunca en cámara.</p></div>
+        <div class="ing"><img data-render="ing-pepper" alt="" /><h4>Pimienta negra</h4><p>Molida en piedra el mismo día.</p></div>
+        <div class="ing"><img data-render="ing-lime" alt="" /><h4>Limón mandarina</h4><p>Acidez brillante y natural.</p></div>
+        <div class="ing"><img data-render="ing-leaf" alt="" /><h4>Culantro</h4><p>Fresco de la huerta.</p></div>
+      </div>
+    </section>
+
+    <!-- =================== EL FRASCO =================== -->
+    <section class="jar-sec" id="frasco">
+      <div class="jar-sec__band"><div class="jar-sec__band-row" id="band">EL FRASCO ✺ EL FRASCO ✺ EL FRASCO ✺ EL FRASCO ✺ EL FRASCO ✺ EL FRASCO ✺&nbsp;</div></div>
+      <div class="product">
+        <figure class="product__img"><img data-render="product" alt="Frasco BRASA Chile Ahumado" /></figure>
+        <div class="product__info">
+          <span class="tag">Más vendido</span>
+          <h3>BRASA<br/>Chile Ahumado</h3>
+          <p>250 ml · Picor 4/5 · Vegano · Sin gluten</p>
+          <div class="product__price">₡4.900</div>
+          <div class="product__buy">
+            <div class="qty"><button id="qMinus" aria-label="Menos">−</button><span id="qVal">1</span><button id="qPlus" aria-label="Más">+</button></div>
+            <button class="btn btn--dark" id="addCart" data-magnetic><span>Agregar al carrito</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="cook">
+        <h2 class="mega mega--cook"><span class="split">A</span><span class="split">COCINAR</span></h2>
+        <a href="#frasco" class="btn btn--yellow" data-magnetic><span>Comprar ahora</span></a>
+      </div>
+    </section>
+
+    <!-- =================== FOOTER =================== -->
+    <footer class="footer">
+      <div class="footer__left">
+        <h3>ACTUALIZACIONES<br/>CON SABOR<br/>A TU CORREO<br/><em>+ 10% EN TU<br/>PRIMER FRASCO</em></h3>
+        <form class="news" id="news">
+          <input type="email" required placeholder="tu@correo.com" aria-label="Correo" />
+          <button class="btn btn--dark" data-magnetic><span>Suscribirme</span></button>
+        </form>
+        <div class="footer__links">
+          <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Contacto</a><span>© 2026 BRASA</span>
+        </div>
+      </div>
+      <div class="footer__right">
+        <img data-render="footer" alt="Frasco de BRASA" />
+      </div>
+    </footer>
+  </main>
+
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
