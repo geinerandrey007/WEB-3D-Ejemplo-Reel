@@ -1,0 +1,306 @@
+/* ==========================================================================
+   SUBMARINER — Premium product showcase
+   ========================================================================== */
+
+:root {
+  --bg: #f5f4f0;
+  --ink: #0a0a0a;
+  --muted: #8a8984;
+  --gutter: 6vw;
+  --font: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* tamaño del reloj: alto limitado por alto y ancho de pantalla (9:16 friendly) */
+  --watch-h: min(64svh, 135vw);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---------- STAGE ---------- */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Piso de estudio: luz arriba, sombra suave abajo */
+.studio {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(120% 70% at 50% 8%, #ffffff 0%, rgba(255,255,255,0) 60%),
+    radial-gradient(90% 40% at 50% 100%, rgba(0,0,0,.07) 0%, rgba(0,0,0,0) 70%);
+}
+
+/* ---------- TÍTULO GIGANTE (detrás del reloj) ---------- */
+.title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 1;
+  margin-top: -0.5em;
+  font-size: 13.4vw;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--ink);
+  will-change: transform, opacity;
+  pointer-events: none;
+  user-select: none;
+}
+.title__word { display: inline-block; padding-right: 0.055em; /* compensa tracking negativo */ }
+.title__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ---------- RELOJ ---------- */
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  perspective: 1400px;
+  perspective-origin: 50% 45%;
+  pointer-events: none;
+}
+
+.watch-wrap {
+  position: relative;
+  height: var(--watch-h);
+  aspect-ratio: 3 / 5;
+  will-change: transform, opacity;
+}
+
+.watch {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.watch__inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.watch__img,
+.watch__layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+/* cara frontal: sombra suave */
+.watch__img {
+  z-index: 2;
+  filter: drop-shadow(0 28px 34px rgba(0, 0, 0, .22)) drop-shadow(0 6px 10px rgba(0, 0, 0, .12));
+}
+/* capas traseras que simulan grosor al rotar (se clonan en JS) */
+.watch__layer {
+  filter: brightness(.55) contrast(1.05);
+  pointer-events: none;
+}
+
+/* Sombra/reflejo de piso */
+.floor-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: -3%;
+  width: 150%;
+  height: 9%;
+  margin-left: -75%;
+  background: radial-gradient(closest-side, rgba(0,0,0,.26), rgba(0,0,0,0));
+  filter: blur(14px);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+/* ---------- SCRIM inferior ---------- */
+.scrim {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 40%;
+  z-index: 3;
+  background: linear-gradient(to top, var(--bg) 8%, rgba(245,244,240,.88) 38%, rgba(245,244,240,0) 100%);
+  opacity: 0;
+  will-change: opacity;
+  pointer-events: none;
+}
+
+/* ---------- LABELS ---------- */
+.label {
+  position: absolute;
+  left: var(--gutter);
+  bottom: max(5svh, env(safe-area-inset-bottom));
+  z-index: 4;
+  font-size: clamp(10px, 2.9vw, 13px);
+  font-weight: 500;
+  letter-spacing: .22em;
+  color: var(--muted);
+  will-change: transform, opacity;
+}
+.hint {
+  position: absolute;
+  right: var(--gutter);
+  bottom: max(5svh, env(safe-area-inset-bottom));
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(10px, 2.9vw, 13px);
+  font-weight: 500;
+  letter-spacing: .22em;
+  color: var(--muted);
+  will-change: opacity;
+}
+.hint i {
+  display: block;
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(var(--muted), rgba(138,137,132,0));
+  transform-origin: top;
+  animation: hintline 2.2s ease-in-out infinite;
+}
+@keyframes hintline {
+  0%   { transform: scaleY(0); opacity: 0; }
+  40%  { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+.counter {
+  position: absolute;
+  top: max(3.5svh, env(safe-area-inset-top));
+  right: var(--gutter);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(10px, 2.9vw, 13px);
+  font-weight: 500;
+  letter-spacing: .22em;
+  color: var(--muted);
+  opacity: 0;
+  will-change: opacity;
+}
+.counter__now { color: var(--ink); }
+.counter__sep { width: 22px; height: 1px; background: var(--muted); display: block; }
+
+/* ---------- CALLOUTS ---------- */
+.callouts { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+
+.callout {
+  position: absolute;
+  bottom: max(6svh, env(safe-area-inset-bottom));
+  width: 74vw;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+.callout[data-side="left"]   { left: var(--gutter); text-align: left; }
+.callout[data-side="right"]  { right: var(--gutter); text-align: right; }
+.callout[data-side="center"] { left: 50%; margin-left: -37vw; text-align: center; }
+
+.callout__index {
+  display: block;
+  margin-bottom: 1.2svh;
+  font-size: clamp(10px, 2.9vw, 13px);
+  font-weight: 500;
+  letter-spacing: .22em;
+  color: var(--muted);
+}
+.callout h2 {
+  font-size: clamp(34px, 11.5vw, 60px);
+  line-height: .92;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.callout__line {
+  display: block;
+  width: 34px;
+  height: 2px;
+  margin: 2.2svh 0 1.6svh;
+  background: var(--ink);
+  transform-origin: left center;
+  will-change: transform;
+}
+.callout[data-side="right"]  .callout__line { margin-left: auto; transform-origin: right center; }
+.callout[data-side="center"] .callout__line { margin-left: auto; margin-right: auto; transform-origin: center; }
+.callout p {
+  max-width: 28ch;
+  font-size: clamp(12px, 3.5vw, 15px);
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--muted);
+}
+.callout[data-side="right"]  p { margin-left: auto; }
+.callout[data-side="center"] p { margin: 0 auto; }
+
+/* ---------- OUTRO ---------- */
+.outro {
+  height: 70svh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 1.4em;
+  background: var(--bg);
+}
+.outro__big {
+  font-size: 13.4vw;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+.outro__small {
+  font-size: clamp(10px, 2.9vw, 13px);
+  font-weight: 500;
+  letter-spacing: .22em;
+  color: var(--muted);
+}
+
+/* ---------- LANDSCAPE / DESKTOP ---------- */
+@media (orientation: landscape) {
+  :root { --watch-h: min(78svh, 70vw); --gutter: 7vw; }
+
+  .title { font-size: min(13.4vw, 24svh); }
+  .outro__big { font-size: min(13.4vw, 24svh); }
+
+  .scrim { display: none; }
+
+  .callout {
+    bottom: auto;
+    top: 50%;
+    width: 30vw;
+    margin-top: -14svh;
+  }
+  .callout[data-side="center"] { top: auto; bottom: 7svh; margin-top: 0; left: var(--gutter); right: auto; text-align: left; margin-left: 0; }
+  .callout[data-side="center"] .callout__line { margin-left: 0; margin-right: 0; transform-origin: left center; }
+  .callout[data-side="center"] p { margin: 0; }
+  .callout h2 { font-size: clamp(40px, 5.2vw, 84px); }
+  .callout p { font-size: clamp(13px, 1.15vw, 17px); }
+  .label, .hint, .counter { font-size: 12px; }
+}
