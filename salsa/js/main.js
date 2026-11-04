@@ -81,7 +81,7 @@ function layout() {
 }
 const fit = () => {
   const a = innerWidth / innerHeight;
-  return { s: THREE.MathUtils.clamp(a / 1.25, 0.62, 1), x: a < 0.9 ? 0.15 : 1, y: a < 0.9 ? 0.25 : 0 };
+  return { s: THREE.MathUtils.clamp(a / 1.25, 0.62, 1), x: a < 0.9 ? 0.15 : 1, y: a < 0.9 ? -0.05 : 0 };
 };
 
 function buildMain() {
@@ -281,15 +281,10 @@ function initTimelines() {
     x: () => -dist(), ease: "none",
     scrollTrigger: {
       trigger: sec, start: "top top", end: () => "+=" + dist(), pin: true, scrub: 1, invalidateOnRefresh: true,
-      onUpdate: () => {
-        let best = null, bd = 1e9;
-        panels.forEach((p) => { const r = p.getBoundingClientRect(); const d = Math.abs(r.left + r.width / 2 - innerWidth / 2); if (d < bd) { bd = d; best = p; } });
-        sec.style.backgroundColor = bd < innerWidth * 0.6 ? best.dataset.bg : "";
-      },
     },
   });
   panels.forEach((p) => {
-    gsap.from(p.querySelector("img"), { rotate: -14, scale: 0.8, ease: "power2.out", scrollTrigger: { trigger: p, containerAnimation: gsap.getTweensOf(track)[0], start: "left 90%", end: "center center", scrub: true } });
+    gsap.from(p.querySelector("img"), { scale: 1.25, xPercent: -10, ease: "power2.out", scrollTrigger: { trigger: p, containerAnimation: gsap.getTweensOf(track)[0], start: "left 90%", end: "center center", scrub: true } });
   });
 
   // ---- ingredientes ----

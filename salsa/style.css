@@ -284,21 +284,21 @@ img[data-render].is-ready { opacity: 1; animation: none; background: none; }
 /* =====================================================================
    SABORES
    ===================================================================== */
-.flavors { position: relative; background: var(--black); overflow: hidden; transition: background-color .6s; }
+.flavors { position: relative; background: var(--black); overflow: hidden; }
 .flavors__track { display: flex; height: 100vh; width: max-content; will-change: transform; }
-.flavor { width: 100vw; height: 100%; flex: none; display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: var(--gutter); padding: 100px var(--gutter) 60px; }
-.flavor--intro { display: flex; flex-direction: column; justify-content: center; width: 70vw; color: var(--cream); }
+.flavor { width: 100vw; height: 100%; flex: none; display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: var(--gutter); padding: 0 var(--gutter) 0 0; overflow: hidden; }
+.flavor--intro { display: flex; flex-direction: column; justify-content: center; width: 70vw; color: var(--cream); padding: 0 var(--gutter); }
 .flavor--intro .big { color: var(--orange); font-size: clamp(80px, 15vw, 280px); }
 .flavor--intro p { font-size: 18px; margin: 20px 0 0; }
-.flavor img { width: 100%; height: 80vh; object-fit: contain; }
+.flavor img { width: 100%; height: 100%; object-fit: cover; }
 .flavor__info { color: var(--black); }
 .flavor__n { font-family: var(--display); font-size: 22px; }
 .flavor h3 { font-family: var(--display); font-weight: 400; font-size: clamp(56px, 7vw, 130px); line-height: .9; margin: 10px 0 20px; text-transform: uppercase; }
 .flavor p { font-size: 18px; max-width: 380px; margin: 0; }
 .flavor__heat { margin-top: 20px; font-size: 26px; letter-spacing: .1em; }
 @media (max-width: 760px) {
-  .flavor { grid-template-columns: 1fr; grid-template-rows: 1fr auto; gap: 10px; }
-  .flavor img { height: 52vh; }
+  .flavor { grid-template-columns: 1fr; grid-template-rows: 58vh auto; gap: 10px; padding: 0 0 40px; align-items: start; }
+  .flavor__info { padding: 0 var(--gutter); }
   .flavor--intro { width: 100vw; }
 }
 
@@ -367,4 +367,15 @@ img[data-render].is-ready { opacity: 1; animation: none; background: none; }
 /* menos movimiento */
 @media (prefers-reduced-motion: reduce) {
   .grain, .ring, .hero__scroll i { animation: none; }
+}
+
+/* ---------------- móvil: historia ---------------- */
+@media (max-width: 760px) {
+  .mega--hero { font-size: 27vw; margin-top: 2vh; }
+  .hero__kicker { display: none; }
+  .hero__foot p { display: none; }
+  .s--persp { justify-content: flex-start; padding-bottom: 60px; }
+  .s--persp .stats { margin-top: auto; }
+  .stats { gap: 18px 28px; }
+  .stats b { font-size: 40px; }
 }
