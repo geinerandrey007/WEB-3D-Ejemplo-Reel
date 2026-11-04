@@ -59,7 +59,7 @@ body {
   top: 50%;
   z-index: 1;
   margin-top: -0.5em;
-  font-size: 13.4vw;
+  font-size: 24vw;
   line-height: 1;
   font-weight: 900;
   letter-spacing: -0.055em;
@@ -74,81 +74,29 @@ body {
 .title__word { display: inline-block; padding-right: 0.055em; /* compensa tracking negativo */ }
 .title__char {
   display: inline-block;
+  white-space: pre;
   will-change: transform, opacity;
 }
 
-/* ---------- RELOJ ---------- */
-.scene {
-  position: absolute;
-  inset: 0;
+/* ---------- PRODUCTO 3D (canvas WebGL transparente) ---------- */
+.gl {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
   z-index: 2;
-  display: grid;
-  place-items: center;
-  perspective: 1400px;
-  perspective-origin: 50% 45%;
   pointer-events: none;
-}
-
-.watch-wrap {
-  position: relative;
-  height: var(--watch-h);
-  aspect-ratio: 3 / 5;
   will-change: transform, opacity;
-}
-
-.watch {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-.watch__inner {
-  position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
-}
-.watch__img,
-.watch__layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-/* cara frontal: sombra suave */
-.watch__img {
-  z-index: 2;
-  filter: drop-shadow(0 28px 34px rgba(0, 0, 0, .22)) drop-shadow(0 6px 10px rgba(0, 0, 0, .12));
-}
-/* capas traseras que simulan grosor al rotar (se clonan en JS) */
-.watch__layer {
-  filter: brightness(.55) contrast(1.05);
-  pointer-events: none;
-}
-
-/* Sombra/reflejo de piso */
-.floor-shadow {
-  position: absolute;
-  left: 50%;
-  bottom: -3%;
-  width: 150%;
-  height: 9%;
-  margin-left: -75%;
-  background: radial-gradient(closest-side, rgba(0,0,0,.26), rgba(0,0,0,0));
-  filter: blur(14px);
-  transform-origin: 50% 50%;
-  will-change: transform, opacity;
+  filter: drop-shadow(0 26px 30px rgba(0,0,0,.18));
 }
 
 /* Anillo orbital fino alrededor del reloj */
 .orbit {
   position: absolute;
   left: 50%; top: 50%;
-  width: calc(var(--watch-h) * 1.12);
+  --d: min(84vw, 58svh);
+  width: var(--d);
   aspect-ratio: 1;
-  margin: calc(var(--watch-h) * -0.56) 0 0 calc(var(--watch-h) * -0.56);
+  margin: calc(var(--d) / -2) 0 0 calc(var(--d) / -2);
+  z-index: 1;
   overflow: visible;
   pointer-events: none;
   will-change: transform, opacity;
@@ -163,17 +111,6 @@ body {
   opacity: 0;
   pointer-events: none;
   will-change: opacity;
-}
-
-/* Capas del modo "vista explotada" (se crean en JS) */
-.watch__part {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: contain;
-  visibility: hidden;
-  filter: drop-shadow(0 18px 24px rgba(0,0,0,.28));
-  pointer-events: none;
-  -webkit-user-drag: none;
 }
 
 /* ---------- SCRIM inferior ---------- */
@@ -308,7 +245,7 @@ body {
   background: var(--bg);
 }
 .outro__big {
-  font-size: 13.4vw;
+  font-size: 24vw;
   font-weight: 900;
   letter-spacing: -0.055em;
   line-height: 1;
@@ -324,8 +261,8 @@ body {
 @media (orientation: landscape) {
   :root { --watch-h: min(78svh, 70vw); --gutter: 7vw; }
 
-  .title { font-size: min(15.5vw, 34svh); }
-  .outro__big { font-size: min(13.4vw, 24svh); }
+  .title { font-size: min(21vw, 42svh); }
+  .outro__big { font-size: min(21vw, 42svh); }
 
   .scrim { display: none; }
 

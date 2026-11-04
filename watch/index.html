@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>SUBMARINER — Product Showcase</title>
+  <meta name="theme-color" content="#f5f4f0" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800;900&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===================== STAGE (pineado con ScrollTrigger) ===================== -->
+  <main class="stage" id="stage">
+
+    <!-- Piso de estudio: horizonte suave + viñeta -->
+    <div class="studio" aria-hidden="true"></div>
+
+    <!-- Título gigante (queda DETRÁS del reloj). Las letras se generan en JS -->
+    <h1 class="title" id="title" aria-label="Submariner">
+      <span class="title__word" id="titleWord">SUBMARINER</span>
+    </h1>
+
+    <!-- Listones "MECHANICAL HEART" (canvas, se dibujan con el scroll) -->
+    <canvas class="ribbons" id="ribbons" aria-hidden="true"></canvas>
+
+    <!-- Reloj -->
+    <div class="scene" id="scene">
+      <div class="watch-wrap" id="watchWrap">
+        <svg class="orbit" id="orbit" viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="49.5" pathLength="1" />
+        </svg>
+        <div class="floor-shadow" id="floorShadow" aria-hidden="true"></div>
+
+        <div class="watch" id="watch">
+          <div class="watch__inner" id="watchInner">
+            <!--
+              ╔══════════════════════════════════════════════════════════╗
+              ║  AQUÍ ESTÁ LA REFERENCIA A TU IMAGEN DEL PRODUCTO         ║
+              ║  Reemplaza el archivo  /assets/product.png                ║
+              ║  (PNG con fondo transparente, reloj vertical con correa)  ║
+              ║  Si el archivo no existe, se muestra un placeholder SVG.  ║
+              ╚══════════════════════════════════════════════════════════╝
+            -->
+            <img
+              id="watchImg"
+              class="watch__img"
+              src="assets/product.png"
+              alt="Submariner"
+              draggable="false"
+              onerror="this.onerror=null;this.src='assets/product-placeholder.svg';this.dispatchEvent(new Event('fallback'));"
+            />
+            <!-- Las capas de "grosor" 3D se clonan desde #watchImg en script.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Degradado inferior para que el texto siempre lea bien sobre el reloj -->
+    <div class="scrim" aria-hidden="true"></div>
+
+    <!-- Hero label + hint -->
+    <p class="label" id="label">MODEL 126610LN</p>
+    <p class="hint" id="hint"><span>SCROLL</span><i></i></p>
+
+    <!-- Contador de pasos -->
+    <div class="counter" id="counter" aria-hidden="true">
+      <span class="counter__now" id="counterNow">01</span><span class="counter__sep"></span><span>06</span>
+    </div>
+
+    <!-- Callouts (uno por paso del scroll; el orden importa, ver STEPS en script.js) -->
+    <section class="callouts" aria-live="polite">
+      <article class="callout" data-side="left">
+        <span class="callout__index">01</span>
+        <h2>CERAMIC<br />BEZEL</h2>
+        <i class="callout__line"></i>
+        <p>Cerachrom: rayaduras imposibles, color que no se apaga.</p>
+      </article>
+
+      <article class="callout" data-side="right">
+        <span class="callout__index">02</span>
+        <h2>300M<br />WATERPROOF</h2>
+        <i class="callout__line"></i>
+        <p>Corona Triplock. Hermético hasta 1 000 pies de profundidad.</p>
+      </article>
+
+      <article class="callout" data-side="left">
+        <span class="callout__index">03</span>
+        <h2>LAYER<br />BY LAYER</h2>
+        <i class="callout__line"></i>
+        <p>Caja, bisel, esfera y mecanismo: cada capa, una sola pieza.</p>
+      </article>
+
+      <article class="callout" data-side="right">
+        <span class="callout__index">04</span>
+        <h2>MECHANICAL<br />HEART</h2>
+        <i class="callout__line"></i>
+        <p>Calibre 3235. 70 horas de reserva de marcha.</p>
+      </article>
+
+      <article class="callout" data-side="left">
+        <span class="callout__index">05</span>
+        <h2>OYSTER<br />BRACELET</h2>
+        <i class="callout__line"></i>
+        <p>Acero 904L, eslabones macizos y extensión Glidelock.</p>
+      </article>
+
+      <article class="callout" data-side="center">
+        <span class="callout__index">06</span>
+        <h2>SWISS<br />MADE</h2>
+        <i class="callout__line"></i>
+        <p>Cronómetro superlativo, certificado oficialmente.</p>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- ===================== CIERRE (después del pin) ===================== -->
+  <footer class="outro">
+    <p class="outro__big">SUBMARINER</p>
+    <p class="outro__small">MODEL 126610LN</p>
+  </footer>
+
+  <!-- GSAP + ScrollTrigger (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,10 +1,8 @@
-# SUBMARINER — Product showcase (GSAP + ScrollTrigger)
+# AURA X — Product showcase (Three.js + GSAP ScrollTrigger)
 
 Abre `index.html` en el navegador (o `python3 -m http.server` y entra a `localhost:8000`).
+El teléfono está modelado en 3D dentro de `script.js` (no usa imágenes), por eso la vista explotada separa piezas reales.
 
-- **Imagen:** `assets/product.png` es tu reloj recortado con fondo transparente (quitado con IA a partir de tu foto). Puedes reemplazarlo por otro PNG.
-- **Ajustes rápidos** (arriba de `script.js`): `SCRUB`, `SCROLL_LENGTH` (más largo = scroll más lento), `DEPTH_LAYERS`.
-- **Pasos:** intro con título que se desarma, bisel, corona, vista explotada (tema oscuro), corazón mecánico con listones, correa y cierre. Si la vista explotada no calza con tu imagen, ajusta `PARTS` en `script.js`.
-- **Poses de cada ángulo:** array `STEPS` en `script.js` (rotación 3D, escala, enfoque).
-- **Tamaño del reloj:** variable `--watch-h` en `style.css`.
-- Para grabar: ventana/dispositivo en 9:16 (ej. 390×844) y scroll lento y continuo.
+- **Textos / nombre:** título `AURA X` y callouts en `index.html`; la pantalla del teléfono (hora, widgets) se dibuja en `script.js` (`screenTex`).
+- **Ajustes rápidos:** `SCRUB`, `SCROLL_LENGTH` al inicio de `script.js`. Poses de cada paso: array `STEPS`.
+- La versión anterior (reloj con foto) está en `watch/`.
