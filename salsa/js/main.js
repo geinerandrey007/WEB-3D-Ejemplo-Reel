@@ -11,9 +11,15 @@ import { Studio, SHOTS } from "./studio.js";
    PHOTOS: si tenés fotos reales, poné aquí la ruta y reemplaza al render 3D.
    Ej: explosion: "images/manos-especias.jpg"                              */
 const PHOTOS = {
+  // fotos reales de ingredientes (PNG sin fondo, CC0 — ver images/ingredientes/CREDITOS.md)
+  "ing-chili": "images/ingredientes/chile.png",
+  "ing-garlic": "images/ingredientes/ajo.png",
+  "ing-tomato": "images/ingredientes/tomate.png",
+  "ing-pepper": "images/ingredientes/pimienta.png",
+  "ing-lime": "images/ingredientes/limon.png",
+  "ing-leaf": "images/ingredientes/hierbas.png",
   // explosion: "images/manos-especias.jpg",
   // bowl: "images/cocinando.jpg",
-  // flatlay: "images/ingredientes.jpg",
 };
 const SCRUB = 1.2;          // inercia del frasco respecto al scroll
 /* -------------------------------------------------------------------- */
