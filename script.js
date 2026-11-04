@@ -17,7 +17,7 @@ const DEPTH_LAYERS  = 7;        // capas traseras para simular grosor al rotar (
 
 // Vista explotada: radios como fracción del ALTO de tu imagen (reloj centrado).
 // Si tu PNG está recortado distinto, ajusta estos 3 números hasta que cada capa coincida.
-const PARTS = { caseR: 0.222, dialR: 0.166, hubR: 0.05 };
+const PARTS = { cx: 0.47, cy: 0.40, caseR: 0.252, dialR: 0.18, hubR: 0.045 }; // cx/cy = centro del reloj en la imagen (0–1)
 
 const THEME_LIGHT = { "--bg": "#f5f4f0", "--ink": "#0a0a0a", "--muted": "#8a8984" };
 const THEME_DARK  = { "--bg": "#0b0b0c", "--ink": "#f5f4f0", "--muted": "#8b8b88" };
@@ -97,9 +97,9 @@ function sizeParts() {
   if (!parts.strap) return;
   const H = watchEl.offsetHeight || 1;
   const rc = PARTS.caseR * H, rd = PARTS.dialR * H, rh = PARTS.hubR * H;
-  const hole = (r) => `radial-gradient(circle at 50% 50%, transparent ${r}px, #000 ${r + 0.8}px)`;
-  const ring = `radial-gradient(circle at 50% 50%, transparent ${rd}px, #000 ${rd + 0.8}px, #000 ${rc}px, transparent ${rc + 0.8}px)`;
-  const disc = (r) => `radial-gradient(circle at 50% 50%, #000 ${r}px, transparent ${r + 0.8}px)`;
+  const hole = (r) => `radial-gradient(circle at ${PARTS.cx * 100}% ${PARTS.cy * 100}%, transparent ${r}px, #000 ${r + 0.8}px)`;
+  const ring = `radial-gradient(circle at ${PARTS.cx * 100}% ${PARTS.cy * 100}%, transparent ${rd}px, #000 ${rd + 0.8}px, #000 ${rc}px, transparent ${rc + 0.8}px)`;
+  const disc = (r) => `radial-gradient(circle at ${PARTS.cx * 100}% ${PARTS.cy * 100}%, #000 ${r}px, transparent ${r + 0.8}px)`;
   const set = (el, m) => { el.style.webkitMaskImage = m; el.style.maskImage = m; };
   set(parts.strap, hole(rc));
   set(parts.bezel, ring);
